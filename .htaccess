@@ -1,5 +1,0 @@
-Options -Indexes
-
-<FilesMatch "^(bootstrap\.php|schema\.sql|config\.local\.php)$">
-  Require all denied
-</FilesMatch>

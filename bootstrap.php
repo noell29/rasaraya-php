@@ -13,32 +13,8 @@ session_set_cookie_params([
 ]);
 session_start();
 
-function app_config(): array
-{
-    static $config;
-    if (is_array($config)) {
-        return $config;
-    }
-
-    $path = __DIR__ . DIRECTORY_SEPARATOR . 'config.local.php';
-    if (!is_file($path)) {
-        $config = [];
-        return $config;
-    }
-    $loaded = require $path;
-    if (!is_array($loaded)) {
-        throw new RuntimeException('config.local.php harus mengembalikan array konfigurasi.');
-    }
-    $config = $loaded;
-    return $config;
-}
-
 function config_value(string $key, string $default = ''): string
 {
-    $config = app_config();
-    if (isset($config[$key]) && is_string($config[$key])) {
-        return $config[$key];
-    }
     $value = getenv($key);
     return is_string($value) ? $value : $default;
 }
@@ -155,20 +131,6 @@ function format_rupiah(int|float|string $amount): string
 
 function app_url(array $parameters = []): string
 {
-    $configured = config_value('APP_URL');
-    if ($configured !== '') {
-        $parts = parse_url($configured);
-        if (!is_array($parts) || !in_array($parts['scheme'] ?? '', ['http', 'https'], true) ||
-            !isset($parts['host'])) {
-            throw new RuntimeException('APP_URL harus berupa alamat HTTP atau HTTPS yang valid.');
-        }
-        $basePath = rtrim($parts['path'] ?? '', '/');
-        $base = $parts['scheme'] . '://' . $parts['host'] .
-            (isset($parts['port']) ? ':' . $parts['port'] : '') .
-            $basePath . '/index.php';
-        return $base . ($parameters ? '?' . http_build_query($parameters) : '');
-    }
-
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     if (!preg_match('/\A[a-z0-9.-]+(?::\d{1,5})?\z/i', $host)) {
         $host = 'localhost';

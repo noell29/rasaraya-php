@@ -45,19 +45,6 @@ ALTER TABLE products ADD COLUMN image_path VARCHAR(255) NULL DEFAULT NULL AFTER 
 
 Pastikan semua tabel tambahan dari `schema.sql` juga tersedia sebelum menjalankan aplikasi.
 
-## Pasang ke shared hosting/cPanel
-
-1. Pilih paket hosting yang mendukung PHP 8.1+, ekstensi `pdo_mysql` dan `fileinfo`, MariaDB/MySQL, unggah file PHP, serta SSL. Untuk toko kecil, paket shared-hosting Small umumnya cukup untuk mulai; bandingkan batas penyimpanan, backup, dan biaya perpanjangan sebelum membeli.
-2. Tambahkan domain atau subdomain di panel hosting, aktifkan sertifikat SSL, lalu pastikan situs dibuka melalui `https://`.
-3. Di cPanel, buat database MySQL/MariaDB dan pengguna database dengan kata sandi kuat. Beri pengguna itu hak akses hanya ke database aplikasi.
-4. Unggah file proyek ke document root domain. Pertahankan `.htaccess`, folder `assets`, dan `uploads`. Jangan mengganti server publik dengan PHP Development Server.
-5. Salin `config.example.php` menjadi `config.local.php`, lalu isi host, nama database, pengguna, kata sandi, dan `APP_URL` domain Anda. File lokal ini diabaikan Git dan diblokir dari akses web oleh `.htaccess`; jangan mengirim kata sandi melalui chat.
-6. Di phpMyAdmin, pilih database aplikasi yang telah dibuat, lalu impor `schema.sql`. Berkas ini hanya membuat tabel, sehingga cocok untuk hosting yang melarang perintah `CREATE DATABASE`.
-7. Pastikan PHP dapat menulis ke folder `uploads/products` (biasanya izin folder `755`). Jika folder belum ada, aplikasi akan membuatnya saat foto produk pertama diunggah.
-8. Buat atau tetapkan akun admin, lalu uji registrasi, unggah foto, pesanan, dan email reset. SMTP/sendmail harus diatur tersendiri untuk fitur reset kata sandi.
-
-Untuk rekomendasi awal di Indonesia, halaman resmi [Rumahweb Shared Hosting](https://www.rumahweb.com/hosting-murah/) saat ini mencantumkan paket Small dengan MariaDB dan SSL; harga promosi, masa kontrak, batas resource, dan harga perpanjangan dapat berubah. Periksa detail terbaru langsung di situs penyedia sebelum membeli. Domain tidak wajib dibeli bila paket menyediakan subdomain, tetapi domain sendiri lebih mudah dibagikan.
-
 ## Menjadikan akun admin
 
 Daftar sebagai pembeli, lalu tetapkan admin tepercaya melalui phpMyAdmin atau MySQL CLI:
@@ -77,5 +64,3 @@ Masuk sebagai **Penjual / Admin**. Admin dapat menyetujui akun penjual dan meman
 - Pembeli dapat memasukkan produk ke keranjang, membuat pesanan, menghubungi toko lewat WhatsApp, dan melihat statusnya.
 - Reset kata sandi dikirim melalui fungsi `mail()` PHP. Atur SMTP/sendmail dan environment `MAIL_FROM` sebelum digunakan.
 - Jangan menghapus tabel atau database jika ingin mempertahankan data aplikasi.
-
-Untuk server publik, gunakan akun database khusus dengan izin minimum, aktifkan HTTPS, dan jangan menyimpan kredensial database di file yang dipublikasikan.
